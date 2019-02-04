@@ -1,7 +1,7 @@
 const path = require('path')
 
-const ROOT = path.resolve(__dirname)
+const _root = path.resolve(__dirname)
 
 module.exports = {
-  ROOT,
+  _root,
 }
