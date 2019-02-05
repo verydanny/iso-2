@@ -1,5 +1,27 @@
-import express from 'express'
+import * as Express from 'express'
+import render from './render'
+import { _root } from '../../env'
 
-export const startServer = (app) => {
-  app.use('/', (req, res, next) => res.send('Hello World'))
+interface IManifestAsset {
+  file?: string,
+  url?: string,
 }
+
+export interface IManifest {
+  hash: string,
+  publicPath: string,
+  assets: {
+    js: Array<IManifestAsset>,
+    css: [] | Array<IManifestAsset>,
+    secondary: [] | Array<IManifestAsset>
+  },
+  server: {
+    hash: string,
+    file: string,
+  }
+}
+
+export const startServer = (req: Express.Request, res: Express.Response, { assets }: IManifest, state) => {
+  res.send(render({ title: 'Hello', assets }))
+}
+

@@ -1,5 +1,5 @@
+import webpack from 'webpack'
 const path = require('path')
-const webpack = require('webpack')
 const { _root } = require('../../env')
 
 const _dev = process.env.NODE_ENV === 'development'
@@ -15,7 +15,9 @@ module.exports = {
         exclude: /node_modules/,
         loader: 'babel-loader',
         options: {
-          cacheDirectory: true,
+          babelrc: false,
+          configFile: path.resolve('conf/babel/babel.webpack'),
+          cacheDirectory: false,
         },
       },
     ],

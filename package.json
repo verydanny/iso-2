@@ -7,11 +7,12 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "dev:iso": "NODE_ENV=development node bin/development.js"
+    "dev:iso": "NODE_ENV=development babel-node --config-file ./conf/babel/babel.node.js bin/development.js"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.2.2",
+    "@babel/node": "^7.2.2",
     "@babel/plugin-proposal-class-properties": "^7.2.3",
     "@babel/plugin-proposal-object-rest-spread": "^7.2.0",
     "@babel/preset-env": "^7.2.3",
@@ -22,6 +23,7 @@
     "@types/webpack-env": "^1.13.6",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.5",
+    "chokidar": "^2.0.4",
     "clean-webpack-plugin": "^1.0.1",
     "css-loader": "^2.1.0",
     "eslint": "5.12.0",
@@ -37,12 +39,15 @@
     "webpack-cli": "^3.2.1",
     "webpack-hot-middleware": "^2.24.3",
     "webpack-isomorphic-dev-middleware": "^4.1.0",
-    "webpack-merge": "^4.2.1"
+    "webpack-merge": "^4.2.1",
+    "webpack-sort-chunks": "^0.2.0"
   },
   "dependencies": {
     "@babel/register": "^7.0.0",
     "@types/express": "^4.16.1",
+    "deepmerge": "^3.1.0",
     "express": "^4.16.4",
+    "lodash": "^4.17.11",
     "morgan": "^1.9.1",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
