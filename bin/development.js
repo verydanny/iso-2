@@ -1,25 +1,21 @@
 import express from 'express'
 import webpack from 'webpack'
 import * as path from 'path'
-import webpackIsomorphicDevMiddleware from 'webpack-isomorphic-dev-middleware'
+// import buildWebpackMiddleware from 'webpack-build-isomorphic'
+import webpackDevIso from 'webpack-isomorphic-dev-middleware'
 import webpackHotMiddleware from 'webpack-hot-middleware'
 
 import createBuildManifest from './manifest'
-import clientConfig from '../conf/webpack/webpack.client'
-import serverConfig from '../conf/webpack/webpack.server'
+import clientConfig from '../conf/webpack/client.babel'
+import serverConfig from '../conf/webpack/server.babel'
 import { _root } from '../env'
 const clientCompiler = webpack(clientConfig)
 const serverCompiler = webpack(serverConfig)
 
 const app = express()
-const state = {
-  server: undefined,
-  sockets: [],
-  start: undefined,
-}
 
 app.use(
-  webpackIsomorphicDevMiddleware(clientCompiler, serverCompiler, {
+  webpackDevIso(clientCompiler, serverCompiler, {
     memoryFs: true,
     notify: {
       title: 'Webpack Status',
@@ -28,21 +24,22 @@ app.use(
   }),
 )
 
+// app.use(
+//   buildWebpackMiddleware(clientCompiler, serverCompiler, {
+//     memoryFs: true,
+//   }),
+// )
+
 app.use(webpackHotMiddleware(clientCompiler, { quiet: true }))
 
 app.use(async (req, res, next) => {
   const { isomorphic } = res.locals
-  const { startServer } = isomorphic.exports
+  const { renderer } = isomorphic.exports
   const buildManifest =
     isomorphic.buildManifest || createBuildManifest(isomorphic.compilation)
 
-  startServer(req, res, buildManifest)
+  renderer(buildManifest)(req, res, next)
+  next()
 })
 
-async function start() {
-  state.server = await app.listen(3000, () => console.log('Listening on port 3000'))
-  await state.server.on('connection', socket => state.sockets.push(socket))
-}
-
-state.start = start
-start()
+app.listen(3000, () => console.log('Listening on port 3000'))

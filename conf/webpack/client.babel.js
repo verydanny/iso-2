@@ -1,7 +1,7 @@
 const path = require('path')
 const { _root } = require('../../env')
 const merge = require('webpack-merge')
-const base = require('./webpack.base')
+const base = require('./base.babel')
 
 const _dev = process.env.NODE_ENV === 'development'
 
@@ -15,12 +15,30 @@ module.exports = merge(base, {
     path: path.resolve(_root, 'lib/client'),
     publicPath: '/',
     filename: 'app.js',
-    chunkFilename: '[id]-[name].js',
+    chunkFilename: '[name].js',
     hotUpdateMainFilename: 'hot-update.json',
     hotUpdateChunkFilename: '[id].hot-update.js',
   },
+  optimization: {
+    runtimeChunk: 'single',
+    namedChunks: true,
+    splitChunks: {
+      chunks: 'all',
+    },
+  },
   module: {
     rules: [
+      {
+        test: /\.tsx?$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader',
+        options: {
+          babelrc: false,
+          configFile: path.resolve(__dirname, '../babel/babel.webpack.client'),
+          cacheDirectory: true,
+          cacheCompression: false,
+        },
+      },
       {
         test: /\.scss$/,
         use: [

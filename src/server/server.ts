@@ -1,27 +1,15 @@
-import * as Express from 'express'
-import render from './render'
+import express from 'express'
 import { _root } from '../../env'
+import { renderer } from './middleware/renderer'
 
-interface IManifestAsset {
-  file?: string,
-  url?: string,
+const _prod = process.env.NODE_ENV === 'production'
+
+if (_prod) {
+  const app = express()
+
+  app.get('/', renderer())
+
+  app.listen(3000, () => console.log('Listening on port 3000'))
 }
 
-export interface IManifest {
-  hash: string,
-  publicPath: string,
-  assets: {
-    js: Array<IManifestAsset>,
-    css: [] | Array<IManifestAsset>,
-    secondary: [] | Array<IManifestAsset>
-  },
-  server: {
-    hash: string,
-    file: string,
-  }
-}
-
-export const startServer = (req: Express.Request, res: Express.Response, { assets }: IManifest, state) => {
-  res.send(render({ title: 'Hello', assets }))
-}
-
+export { renderer }

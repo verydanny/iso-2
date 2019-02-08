@@ -1,13 +1,13 @@
 module.exports = function(api) {
   const baseConfig = require('./babel.base')
   const envConfig = require('./babel.env')({
-    modules: 'commonjs',
+    modules: false,
     targets: {
       node: 'current',
     },
   }).presets
 
-  api.cache(false)
+  api.cache.using(() => process.env.NODE_ENV === 'development')
 
   const presets = [...envConfig, ...baseConfig.presets]
   const plugins = ['dynamic-import-node', ...baseConfig.plugins]

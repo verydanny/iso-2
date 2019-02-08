@@ -1,8 +1,9 @@
-module.exports = ({ modules }) => ({
+module.exports = ({ modules, targets }) => ({
   presets: [
     [
       '@babel/preset-env',
       {
+        targets,
         modules: modules,
       },
     ],
